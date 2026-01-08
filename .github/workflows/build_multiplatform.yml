@@ -1,0 +1,91 @@
+name: Build All Platforms
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Configure CMake
+      run: cmake -B build
+
+    - name: Build
+      run: cmake --build build --config Release
+
+    - name: Upload Windows Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: boats_windows
+        path: build/Release/*.exe
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libxcursor-dev libxinerama-dev
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: cmake --build build
+
+    - name: Upload Linux Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: boats_linux
+        path: |
+          build/server
+          build/client_cli
+          build/client_gui
+
+  build-macos-intel:
+    runs-on: macos-13 # Intel Mac (x86_64)
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: cmake --build build
+
+    - name: Upload macOS Intel Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: boats_macos_intel
+        path: |
+          build/server
+          build/client_cli
+          build/client_gui
+
+  build-macos-arm:
+    runs-on: macos-14 # Apple Silicon Mac (arm64)
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: cmake --build build
+
+    - name: Upload macOS ARM Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: boats_macos_arm
+        path: |
+          build/server
+          build/client_cli
+          build/client_gui
