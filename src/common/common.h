@@ -36,6 +36,12 @@ static inline void sock_cleanup(void) { }
 #endif
 
 /* Read a line (newline-terminated) from socket into buf */
+/* ssize_t is not standard on Windows MSVC, usually needed to be defined or use int/long long */
+#ifdef _WIN32
+  #include <BaseTsd.h>
+  typedef SSIZE_T ssize_t;
+#endif
+
 ssize_t read_line(sock_t fd, char *buf, size_t maxlen);
 
 /* Write UTF-8 string to console (handles Windows console API) */

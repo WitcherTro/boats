@@ -14,7 +14,10 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Configure CMake
-      run: cmake -B build
+      # Using -G "MinGW Makefiles" to use GCC/MinGW, which is what the user uses locally
+      # and avoids MSVC-specific issues like missing pthread or unistd.h headers 
+      # or strict standard compliance errors.
+      run: cmake -B build -G "MinGW Makefiles"
 
     - name: Build
       run: cmake --build build --config Release
@@ -51,7 +54,7 @@ jobs:
           build/client_gui
 
   build-macos-intel:
-    runs-on: macos-13 # Intel Mac (x86_64)
+    runs-on: macos-13
     steps:
     - uses: actions/checkout@v4
 
@@ -71,7 +74,7 @@ jobs:
           build/client_gui
 
   build-macos-arm:
-    runs-on: macos-14 # Apple Silicon Mac (arm64)
+    runs-on: macos-15
     steps:
     - uses: actions/checkout@v4
 
