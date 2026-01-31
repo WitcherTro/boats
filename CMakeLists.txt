@@ -20,8 +20,11 @@ include_directories(
 
 set(SOURCES_COMMON
 	src/common/game.c
+	src/common/game.h
 	src/common/common.c
+	src/common/common.h
     src/common/generic_queue.c
+    src/common/generic_queue.h
 )
 
 set(SOURCES_CLIENT_CORE
@@ -55,9 +58,13 @@ set(SOURCES_GUI
 set(SOURCES_SERVER
 	src/server/server.c
 	src/server/server_state.c
+	src/server/server_state.h
 	src/server/server_message.c
+	src/server/server_message.h
 	src/server/server_client.c
+	src/server/server_client.h
 	src/server/server_commands.c
+	src/server/server_commands.h
 )
 
 add_executable(server

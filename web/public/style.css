@@ -1,0 +1,270 @@
+:root {
+    --cell-size: 30px;
+    --grid-gap: 2px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #1a1a1a;
+    color: #eee;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: none; /* Prevent bounce on mobile */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#game-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin: 10px 0;
+}
+
+.grids {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.grid-container h3 {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: #aaa;
+}
+
+.grid {
+    display: grid;
+    /* Use variables for responsiveness */
+    grid-template-columns: repeat(9, var(--cell-size));
+    grid-template-rows: repeat(7, var(--cell-size));
+    gap: var(--grid-gap);
+    background-color: #333;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    margin: 0 auto;
+}
+
+.cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    background-color: #0b3d68;
+    border: 1px solid #1a5c92;
+    cursor: pointer;
+    border-radius: 2px;
+    box-sizing: border-box;
+    transition: background-color 0.1s;
+}
+
+.cell:hover {
+    filter: brightness(1.2);
+}
+
+.cell.ship { 
+    background-color: #795548; /* Brown (Wooden Ship) */
+    border-color: #4e342e;
+} 
+.cell.hit { background-color: #e53935; } /* Red */
+.cell.miss { 
+    background-color: #e1f5fe; /* Light Blue/White Splash */
+    opacity: 0.7; 
+} 
+.cell.sunk { background-color: #212121; border-color: #e53935; border-width: 2px;} /* Dark hull */
+
+.cell.revealed {
+    opacity: 0.6; /* Slightly ghosted to indicate they were revealed at end */
+    border: 1px dashed #795548;
+}
+
+/* Dragging feedback */
+.cell.dragging-source {
+    opacity: 0.4;
+}
+
+.cell.drag-over-valid {
+    background-color: #44aa44 !important;
+}
+
+.cell.drag-over-invalid {
+    background-color: #aa4444 !important;
+}
+
+/* Ghost ship processing */
+#ghost-ship {
+    position: fixed;
+    pointer-events: none;
+    background: rgba(136, 136, 136, 0.8);
+    border: 2px solid #fff;
+    z-index: 1000;
+    display: none;
+    /* Flex layout to mimic cells */
+    display: flex; /* overridden by JS usually */
+    flex-wrap: nowrap;
+}
+
+.ghost-cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+#messages {
+    height: 100px;
+    overflow-y: scroll;
+    border: 1px solid #555;
+    background: #252525;
+    margin-top: 10px;
+    text-align: left;
+    padding: 5px;
+    font-size: 14px;
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #0077cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+#lobby-list {
+    margin: 20px auto;
+    max-width: 500px;
+    background: #333;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.lobby-item {
+    background: #444;
+    padding: 10px;
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 3px;
+}
+
+.lobby-item span {
+    font-weight: bold;
+}
+
+.lobby-btn-join {
+    background-color: #2ecc71;
+    font-size: 14px;
+    padding: 5px 10px;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+    :root {
+        --cell-size: 9.5vw; /* Fits 9 columns nicely */
+    }
+
+    #game-container {
+        padding: 5px;
+    }
+
+    /* Tab System (Hidden on Desktop) */
+    .mobile-tabs {
+        display: flex;
+        width: 100%;
+        margin-bottom: 10px;
+        background: #333;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 12px;
+        background: none;
+        border: none;
+        color: #888;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-bottom: 3px solid transparent;
+        transition: 0.3s;
+    }
+
+    .tab-btn.active {
+        background: #444;
+        color: #fff;
+        border-bottom-color: #0077cc;
+    }
+
+    /* Only show active grid container on mobile */
+    .grid-container {
+        display: none; /* JS will toggle 'active-view' class */
+        width: 100%;
+        animation: fadeIn 0.3s;
+    }
+
+    .grid-container.active-view {
+        display: block;
+    }
+}
+
+/* Keep both visible on desktop by overriding above */
+@media (min-width: 769px) {
+    .grid-container {
+        display: block !important;
+    }
+    .mobile-tabs {
+        display: none !important;
+    }
+}
+
+    /* Controls at bottom */
+    #controls {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #222;
+        padding: 10px;
+        box-sizing: border-box;
+        border-top: 1px solid #444;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 100;
+    }
+    
+    #place-controls, #fire-controls {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+    
+    #messages {
+        margin-bottom: 80px; /* Space for fixed controls */
+    }
+    
+    button {
+        padding: 12px 15px; /* Bigger touch targets */
+        font-size: 14px;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

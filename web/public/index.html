@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Battleships</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="status">Connecting...</div>
+        
+        <div id="setup-screen" style="display:none;"></div>
+
+        <div id="lobby-screen" style="display:none;">
+            <h1>Battleships</h1>
+            <h2>Lobbies</h2>
+            <div id="lobby-list">
+                <!-- Lobbies injected here -->
+                <p>Loading lobbies...</p>
+            </div>
+            <div id="lobby-controls">
+                <input type="text" id="lobby-name" placeholder="New Lobby Name" />
+                <button onclick="createLobby()">Create Lobby</button>
+                <button onclick="refreshLobbies()">Refresh</button>
+            </div>
+        </div>
+
+        <div id="game-ui" style="display:none;">
+            <!-- Mobile Tabs -->
+            <div class="mobile-tabs">
+                <button class="tab-btn active" onclick="switchTab('my-grid')">My Fleet</button>
+                <button class="tab-btn" onclick="switchTab('op-grid')">Targeting</button>
+            </div>
+
+            <div class="grids">
+                <div class="grid-container active-view" id="container-my-grid">
+                    <h3>Your Grid</h3>
+                    <div id="my-grid" class="grid"></div>
+                    <div id="my-ships">Ships: <span id="ships-status">Waiting...</span></div>
+                </div>
+                <div class="grid-container" id="container-op-grid">
+                    <h3>Opponent</h3>
+                    <div id="op-grid" class="grid"></div>
+                </div>
+            </div>
+            
+            <div id="controls">
+                <div id="place-controls" style="display:none;">
+                    <p>Place Ship (Length: <span id="current-ship-len">2</span>)</p>
+                    <div class="instructions" style="font-size: 0.85rem; color: #ccc; margin: 10px 0;">
+                        Tap to Place • Double Tap to Rotate • Drag to Move
+                    </div>
+                    <button onclick="startAutoPlace()" style="background-color: #8833aa; width: 100%; margin-top:5px;">Random Placement</button>
+                    <!-- Hidden state tracking for logic -->
+                    <span id="current-dir" style="display:none;">H</span>
+                </div>
+                <div id="fire-controls" style="display:none;">
+                    <p>Click on opponent grid to fire!</p>
+                </div>
+            </div>
+            
+            <div id="chat-box">
+                <div id="messages"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const script = document.createElement('script');
+        script.src = "game.js?v=" + new Date().getTime();
+        document.body.appendChild(script);
+    </script>
+</body>
+</html>

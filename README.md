@@ -10,6 +10,7 @@ A robust, cross-platform multiplayer implementation of the classic Battleship ga
 *   **Dual Interface**:
     *   **CLI Client**: Lightweight, terminal-based interface for minimalists.
     *   **GUI Client**: Interactive graphical interface powered by [Raylib](https://www.raylib.com/).
+    *   **Web Client**: Browser-based interface (requires Node.js gateway).
 *   **Chat System**: Integrated real-time messaging between opponents.
 *   **Cross-Platform**: Fully supported on **Windows** (MinGW), **Linux**, and **macOS** (Intel & Apple Silicon).
 *   **Lobby System**: Automated matchmaking queue.

@@ -10,3 +10,4 @@ build/
 !lib/raylib_linux/lib/libraylib.a
 !lib/raylib/lib/libraylib.a
 .DS_Store
+web/node_modules/
